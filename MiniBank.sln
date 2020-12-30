@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBank", "MiniBank.csproj", "{59C7384B-C73B-430B-858A-3D41ED9C11EC}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MiniBankSqlServer", "..\MiniBankSqlServer\MiniBankSqlServer.sqlproj", "{060E3495-4E9F-4C13-80D9-810AE9C25C79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59C7384B-C73B-430B-858A-3D41ED9C11EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59C7384B-C73B-430B-858A-3D41ED9C11EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59C7384B-C73B-430B-858A-3D41ED9C11EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59C7384B-C73B-430B-858A-3D41ED9C11EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060E3495-4E9F-4C13-80D9-810AE9C25C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060E3495-4E9F-4C13-80D9-810AE9C25C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060E3495-4E9F-4C13-80D9-810AE9C25C79}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{060E3495-4E9F-4C13-80D9-810AE9C25C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060E3495-4E9F-4C13-80D9-810AE9C25C79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060E3495-4E9F-4C13-80D9-810AE9C25C79}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BADEB88-A3C6-4ED9-9758-63B79C3C4C87}
+	EndGlobalSection
+EndGlobal

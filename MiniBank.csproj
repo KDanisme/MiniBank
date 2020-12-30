@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{59C7384B-C73B-430B-858A-3D41ED9C11EC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MiniBank</RootNamespace>
+    <AssemblyName>MiniBank</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\ConsoleController.cs" />
+    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="Controllers\IConsoleController.cs" />
+    <Compile Include="Models\Model Creators\IDbModelCreator.cs" />
+    <Compile Include="Models\ListHandler\IListHandler.cs" />
+    <Compile Include="Models\ListHandler\IListHandlerCreator.cs" />
+    <Compile Include="Models\ListHandler\ListHandler.cs" />
+    <Compile Include="Models\ListHandler\ListHandlerCreator.cs" />
+    <Compile Include="Models\Accounts\Account.cs" />
+    <Compile Include="Models\Accounts\Converter\DataReaderAccountConverter.cs" />
+    <Compile Include="Models\Accounts\VipAccount.cs" />
+    <Compile Include="Models\Accounts\Converter\IDataReaderAccountConverter.cs" />
+    <Compile Include="Models\Accounts\Creater\AccountCreator.cs" />
+    <Compile Include="Models\DataReaderConverters\DataReaderConverter.cs" />
+    <Compile Include="Models\DataReaderConverters\IDataReaderConverter.cs" />
+    <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\Model Creators\IModelCreator.cs" />
+    <Compile Include="Models\TextItem\Creator\TextItemCreator.cs" />
+    <Compile Include="Models\TextItem\Creator\ITextItemCreator.cs" />
+    <Compile Include="Models\TextItem\ITextItem.cs" />
+    <Compile Include="Models\TextItem\TextItem.cs" />
+    <Compile Include="Models\Model Creators\ModelCreator.cs" />
+    <Compile Include="Models\Users\Converter\DataReaderUserConverter.cs" />
+    <Compile Include="Models\Users\Creater\IUserCreator.cs" />
+    <Compile Include="Models\Accounts\Creater\IAccountCreator.cs" />
+    <Compile Include="Models\Users\Creater\UserCreator.cs" />
+    <Compile Include="Models\Users\Converter\IDataReaderUserConverter.cs" />
+    <Compile Include="View\IConsoleView.cs" />
+    <Compile Include="View\IView.cs" />
+    <Compile Include="View\ConsoleView.cs" />
+    <Compile Include="Models\Accounts\IAccount.cs" />
+    <Compile Include="Models\Users\IUser.cs" />
+    <Compile Include="Models\Users\User.cs" />
+    <Compile Include="Models\Accounts\SimpleAccount.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
