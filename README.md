@@ -1,6 +1,8 @@
 # MiniBank
 Database Requires 2 Tables:
+
 Account => (int, Identity)Id, (int)Userid, (int)Type, (Money)Balance
+
 User => (int, Identity)Id, (string)Name
 
 Controls:
