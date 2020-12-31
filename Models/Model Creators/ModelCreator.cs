@@ -10,15 +10,12 @@ namespace MiniBank.Models
     {
         public IUserCreator UserCreator { get; set; }
         public IAccountCreator AccountCreator { get; set; }
-        public ITextItemCreator TextItemCreator { get; set; }
-        public IListHandlerCreator ListHandlerCreator { get; set; }
 
-        public ModelCreator(IUserCreator userCreator, IAccountCreator accountCreator, ITextItemCreator textItemCreator, IListHandlerCreator listHandlerCreator)
+
+        public ModelCreator(IUserCreator userCreator, IAccountCreator accountCreator)
         {
                 this.UserCreator = userCreator;
                 this.AccountCreator = accountCreator;
-                this.TextItemCreator = textItemCreator;
-                this.ListHandlerCreator = listHandlerCreator;
         }
     }
 }

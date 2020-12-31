@@ -8,7 +8,6 @@ namespace MiniBank.Models.Users
 {
     interface IUser : IModel
     {
-        List<IAccount> Accounts { get; set; }
         int Id { get; set; }
         string Name { get; set; }
     }

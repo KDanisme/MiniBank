@@ -44,13 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ConsoleController.cs" />
-    <Compile Include="Controllers\IController.cs" />
-    <Compile Include="Controllers\IConsoleController.cs" />
-    <Compile Include="Models\Model Creators\IDbModelCreator.cs" />
-    <Compile Include="Models\ListHandler\IListHandler.cs" />
-    <Compile Include="Models\ListHandler\IListHandlerCreator.cs" />
-    <Compile Include="Models\ListHandler\ListHandler.cs" />
-    <Compile Include="Models\ListHandler\ListHandlerCreator.cs" />
+    <Compile Include="SQL\ISqlRunner.cs" />
     <Compile Include="Models\Accounts\Account.cs" />
     <Compile Include="Models\Accounts\Converter\DataReaderAccountConverter.cs" />
     <Compile Include="Models\Accounts\VipAccount.cs" />
@@ -60,18 +54,14 @@
     <Compile Include="Models\DataReaderConverters\IDataReaderConverter.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\Model Creators\IModelCreator.cs" />
-    <Compile Include="Models\TextItem\Creator\TextItemCreator.cs" />
-    <Compile Include="Models\TextItem\Creator\ITextItemCreator.cs" />
-    <Compile Include="Models\TextItem\ITextItem.cs" />
-    <Compile Include="Models\TextItem\TextItem.cs" />
     <Compile Include="Models\Model Creators\ModelCreator.cs" />
     <Compile Include="Models\Users\Converter\DataReaderUserConverter.cs" />
     <Compile Include="Models\Users\Creater\IUserCreator.cs" />
     <Compile Include="Models\Accounts\Creater\IAccountCreator.cs" />
     <Compile Include="Models\Users\Creater\UserCreator.cs" />
     <Compile Include="Models\Users\Converter\IDataReaderUserConverter.cs" />
+    <Compile Include="SQL\SqlRunner.cs" />
     <Compile Include="View\IConsoleView.cs" />
-    <Compile Include="View\IView.cs" />
     <Compile Include="View\ConsoleView.cs" />
     <Compile Include="Models\Accounts\IAccount.cs" />
     <Compile Include="Models\Users\IUser.cs" />
@@ -79,6 +69,8 @@
     <Compile Include="Models\Accounts\SimpleAccount.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Model Printer\IModelPrinter.cs" />
+    <Compile Include="View\Model Printer\ModelPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

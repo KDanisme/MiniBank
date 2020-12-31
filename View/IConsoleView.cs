@@ -1,10 +1,22 @@
 ﻿using MiniBank.Controllers;
+using MiniBank.Models;
+using System;
+using System.Collections.Generic;
 
-namespace MiniBank.Views
+namespace MiniBank.View
 {
-    interface IConsoleView : IView
+    interface IConsoleView
     {
-        IConsoleController Controller { get; set; }
-        void Update();
+        IModelPrinter ModelPrinter { get; set; }
+        void AskForNewUserName();
+        void AskForNewAccountType();
+        void AskForDepositeAmmount();
+        void AskForWithdrawAmmount();
+        void DisplayWithdrawError();
+        void DisplayInvalidTypeMessage();
+        void DisplayInvalidMoneyFormat();
+        void PrintInteractiveActionList((string text, Action action)[] list, int index);
+        void PrintInteractiveModelList(IModel[] models, int index);
+        void DisplayEmptyList();
     }
 }

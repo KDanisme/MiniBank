@@ -6,201 +6,182 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
-using MiniBank.Views;
 using MiniBank.Models;
+using MiniBank.View;
 
 namespace MiniBank.Controllers
 {
-    class ConsoleController : IConsoleController
+    class ConsoleController : IDisposable
     {
         IConsoleView view;
-        IDbConnection connection;
-        ControllerState state;
-        public ControllerState State { get; set; }
-        public IModelCreator ModelCreator { get; set; }
-        public IDataReaderConverter DataReaderConverter { get; set; }
-        public IListHandler currentListHandler { get; set; }
-        public ConsoleController(IDbConnection connection, IConsoleView view, IModelCreator modelCreator, IDataReaderConverter dataReaderConverter)
+        public ISqlRunner SqlRunner { get; set; }
+        public ConsoleController(ISqlRunner sqlQueryRunner, IConsoleView view)
         {
-            this.ModelCreator = modelCreator;
-            this.DataReaderConverter = dataReaderConverter;
+            this.SqlRunner = sqlQueryRunner;
             this.view = view;
-            this.connection = connection;
-            view.Controller = this;
-            State = ControllerState.Main;
-            HandleStateChange();
-        
-        }
-        ~ConsoleController() => connection.Close();
 
-        IDataReader GetQueryResult(string query)
-        {
-            var command = connection.CreateCommand();
-            command.CommandText = query;
-            return command.ExecuteReader();
         }
-        void ExecuteCommand(string query)
-        {
-            var command = connection.CreateCommand();
-            command.CommandText = query;
-            command.ExecuteNonQuery();
-        }
-
         public void Start()
         {
-            connection.Open();
-            MainLoop();
+            SqlRunner.Connection.Open();
+            SelectActionUI();
         }
-        public void MainLoop()
+        public void CloseApplication() => Environment.Exit(0);
+        public void SelectActionUI()
         {
+            StartActionList(
+                  ("List all users", SelectFromAllUsersUI),
+                  ("Create new user", CreateNewUserUI));
+        }
+        public void SelectFromAllUsersUI()
+        {
+            StartModelList(SelectUserOptionsUI, SqlRunner.GetAllUsers());
+        }
+        public void CreateNewUserUI()
+        {
+            view.AskForNewUserName();
+            SqlRunner.CreateNewUser(Console.ReadLine());
+        }
+        public void SelectUserOptionsUI(IUser user)
+        {
+            StartActionList(
+                   ("View Accounts", () => UserAccountViewUI(user)),
+                  ("Add Account", () => UserAccountCreationUI(user)),
+                  ("Delete", () => SqlRunner.DeleteUserAndAccounts(user)));
+        }
+        public void UserAccountViewUI(IUser user)
+        {
+            StartModelList(AccountOptionSelectionUI, SqlRunner.GetAllAccountsForUser(user));
+        }
+        public void AccountOptionSelectionUI(IAccount account)
+        {
+            StartActionList(
+                  ("Deposite", () => DepositeToAccountUI(account)),
+                  ("Withdraw", () => WithdrawFromAccountUI(account)),
+                  ("Delete", () => SqlRunner.DeleteAccount(account)));
+        }
+        public void UserAccountCreationUI(IUser user)
+        {
+            view.AskForNewAccountType();
+            if (Enum.TryParse(Console.ReadLine(), out AccountType type))
+                SqlRunner.CreateNewAccountForUser(user, type);
+            else
+            {
+                view.DisplayInvalidTypeMessage();
+                Console.ReadKey();
+            }
+        }
+        public void DepositeToAccountUI(IAccount account)
+        {
+            view.AskForDepositeAmmount();
+            if (decimal.TryParse(Console.ReadLine(), out decimal ammount))
+                SqlRunner.DepositeToAccount(account, ammount);
+            else
+                view.DisplayInvalidMoneyFormat();
+        }
+        public void WithdrawFromAccountUI(IAccount account)
+        {
+            view.AskForWithdrawAmmount();
+            if (decimal.TryParse(Console.ReadLine(), out decimal ammount))
+                WithdrawFromAccount(account, ammount);
+            else
+                view.DisplayInvalidMoneyFormat();
+        }
+        void WithdrawFromAccount(IAccount account, decimal ammount)
+        {
+            try
+            {
+                SqlRunner.WithdrawFromAccount(account, ammount);
+            }
+            catch (Exception)
+            {
+                view.DisplayWithdrawError();
+                Console.ReadKey();
+            }
+        }
+
+        void StartModelList<T>(Action<T> action, IEnumerable<T> models) where T : IModel
+        {
+            if (!(models is null))
+                while (true)
+                    if (ChooseFromModelList((IEnumerable<IModel>)models) is T model)
+                        action(model);
+                    else
+                        break;
+        }
+        void StartActionList(params (string, Action)[] actions)
+        {
+            if (!(actions is null))
+                while (true)
+                    if (ChooseFromActionList(actions) is Action action)
+                        action();
+                    else
+                        break;
+        }
+        public Action ChooseFromActionList((string text, Action action)[] list)
+        {
+            if (list is null)
+            {
+                view.DisplayEmptyList();
+                Console.ReadKey();
+                return null;
+            }
+            int index = 0;
             while (true)
             {
-                view.Update();
-                WaitForInput();
-                HandleStateChange();
+                view.PrintInteractiveActionList(list, index);
+                switch (Console.ReadKey().Key)
+                {
+                    case ConsoleKey.Enter:
+                        return list[index].action;
+                    case ConsoleKey.UpArrow:
+                        index = index == 0 ? list.Length - 1 : index - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        index = index == list.Length - 1 ? 0 : index + 1;
+                        break;
+                    case ConsoleKey.Backspace:
+                        return null;
+                    default:
+                        break;
+                }
             }
         }
-        public void HandleStateChange() {
-            switch (state)
+        public IModel ChooseFromModelList(IEnumerable<IModel> models)
+        {
+            if (models is null || !models.Any())
             {
-
-                case ControllerState.Main:
-                    InitMainState();
-                    break;
-                case ControllerState.UserCreation:
-                    break;
-                case ControllerState.AccountCreation:
-                    break;
-                case ControllerState.Withdraw_Deposit:
-                    break;
-                case ControllerState.ListAllUsers:
-                    break;
-                case ControllerState.Deposite:
-                    break;
-                case ControllerState.Withdraw:
-                    break;
-                default:
-                    break;
+                view.DisplayEmptyList();
+                Console.ReadKey();
+                return null;
             }
-        }
-        public void  InitMainState() {
-            currentListHandler = ModelCreator.ListHandlerCreator.Create(new List<(IModel, Action)>{
-                (ModelCreator.TextItemCreator.Create("List all users"),()=>ListAllUsers()),
-                (ModelCreator.TextItemCreator.Create("List all accounts for a given user with balance"),null),
-                (ModelCreator.TextItemCreator.Create("Deposite from account"),null),
-                (ModelCreator.TextItemCreator.Create("Withdraw from account"),null),
-                (ModelCreator.TextItemCreator.Create("Create new user"),null),
-                (ModelCreator.TextItemCreator.Create("Create new account for user"),null),
-                (ModelCreator.TextItemCreator.Create("Delete user and accounts"), null)});
-        }
-        public void WaitForInput()
-        {
-
-            if (IsWaitingForTextInput())
-                HandleTextInput();
-            else
-                HandleListInput();
-        }
-        bool IsWaitingForTextInput() {
-            return currentListHandler is null;
-        }
-        void HandleTextInput() {
-
-            string input = Console.ReadLine();
-            switch (State)
+            IModel[] modelsArr = models.ToArray();
+            int index = 0;
+            while (true)
             {
-                case ControllerState.UserCreation:
-                    CreateNewUser(input);
-                    break;
+                view.PrintInteractiveModelList(modelsArr, index);
 
+                switch (Console.ReadKey().Key)
+                {
+                    case ConsoleKey.Enter:
+                        return modelsArr[index];
+                    case ConsoleKey.UpArrow:
+                        index = index == 0 ? modelsArr.Length - 1 : index - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        index = index == modelsArr.Length - 1 ? 0 : index + 1;
+                        break;
+                    case ConsoleKey.Backspace:
+                        return null;
+                    default:
+                        break;
+                }
             }
         }
-        void HandleListInput()
-        {
-            switch (Console.ReadKey().Key)
-            {
-                case ConsoleKey.Enter:
-                    currentListHandler.Click();
-                    break;
-                case ConsoleKey.UpArrow:
-                    currentListHandler.MoveUp();
-                    break;
-                case ConsoleKey.DownArrow:
-                    currentListHandler.MoveDown();
-                    break;
-                case ConsoleKey.Backspace:
-                    GoBack();
-                    break;
-                default:
-                    break;
-            }
-        }
-        void GoBack()
-        {
-            switch (state)
-            {
-                case ControllerState.Main:
-                    CloseApplication();
-                    break;
-                case ControllerState.Deposite:
-                case ControllerState.Withdraw:
-                case ControllerState.AccountCreation:
-                case ControllerState.UserCreation:
-                case ControllerState.ListAllUsers:
-                    state = ControllerState.Main;
-                    break;
-                default:
-                    break;
-            }
-        }
-        public void CloseApplication()
-        {
-            Environment.Exit(0);
-        }
-        public void ListAllUsers()
-        {
-            state = ControllerState.ListAllUsers;
-            currentListHandler.ItemList.Clear();
-            using (IDataReader datareader = GetQueryResult("SELECT * FROM [User]"))
-                while (datareader.Read())
-                    currentListHandler.ItemList.Add((DataReaderConverter.UserConverter.Convert(datareader), null));
 
-
-        }
-        public IEnumerable<IAccount> ListAllAccountsForUser()
+        public void Dispose()
         {
-            throw new Exception();
-            IUser user = null;
-            return ListAllAccountsForUser(user);
+            SqlRunner.Connection.Dispose();
         }
-        IEnumerable<IAccount> ListAllAccountsForUser(IUser user)
-        {
-            GetQueryResult($"SELECT * FROM [Account] WHERE (UserId) = {user.Id}");
-            return null;
-        }
-        public void CreateNewUser(string name)
-        {
-            ExecuteCommand($"INSERT INTO [User] (NAME) VALUES({name})");
-            state = ControllerState.Main;
-        }
-        public void CreateNewAccountForUser(IUser user, IAccount account)
-        {
-            ExecuteCommand($"INSERT INTO [Account] (UserId,Balance,Type) VALUES({user.Id},{account.Balance},{account.Type})");
-        }
-        public void DeleteUserAndAccounts(IUser user)
-        {
-            DeleteUsersAccounts(user);
-            DeleteUser(user);
-
-        }
-        void DeleteUser(IUser user)
-        {
-            ExecuteCommand($"DELETE FROM [User] WHERE Id = {user.Id}");
-        }
-        void DeleteUsersAccounts(IUser user)
-        {
-            ExecuteCommand($"DELETE FROM [Account] WHERE UserId = {user.Id}");
-        }
-
     }
 }

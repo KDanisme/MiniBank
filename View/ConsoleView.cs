@@ -9,64 +9,74 @@ using MiniBank.Models.Users;
 using MiniBank.Models.Accounts;
 using MiniBank.Models;
 
-namespace MiniBank.Views
+namespace MiniBank.View
 {
     class ConsoleView : IConsoleView
     {
-        public IConsoleController Controller { get; set; }
 
-        public void Update()
+        public IModelPrinter ModelPrinter { get; set; }
+        public ConsoleView(IModelPrinter modelPrinter)
+        {
+            this.ModelPrinter = modelPrinter;
+        }
+
+        public void PrintInteractiveModelList(IModel[] models, int index)
         {
             Console.Clear();
-            
-            for (int i = 0; i < Controller.currentListHandler.ItemList.Count; i++)
-                if (IsSelectedIndex(i))
+            for (int i = 0; i < models.Length; i++)
+                if (i == index)
                 {
                     StartHighlighting();
-                    PrintModel(Controller.currentListHandler[i].model);
+                    ModelPrinter.PrintModel(models[i]);
                     StopHighlighting();
                 }
                 else
-                    PrintModel(Controller.currentListHandler[i].model);
+                    ModelPrinter.PrintModel(models[i]);
         }
-
-        bool IsSelectedIndex(int i)
+        public void PrintInteractiveActionList((string text, Action action)[] actions, int index) {
+            Console.Clear();
+            for (int i = 0; i < actions.Length; i++)
+                if (i == index)
+                {
+                    StartHighlighting();
+                    Console.WriteLine(actions[i].text);
+                    StopHighlighting();
+                }
+                else
+                    Console.WriteLine(actions[i].text);
+        }
+        void StartHighlighting() => Console.ForegroundColor = ConsoleColor.Red;
+        void StopHighlighting() => Console.ForegroundColor = ConsoleColor.Gray;
+        public void AskForNewUserName()
         {
-            return i == Controller.currentListHandler.SelectedIndex;
+            Console.Clear();
+            Console.Write("Name for new user: ");
         }
-        void StartHighlighting()
+        public void AskForDepositeAmmount()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Clear();
+            Console.Write("Insert deposite ammount: ");
         }
-        void StopHighlighting()
+        public void AskForWithdrawAmmount()
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Clear();
+            Console.Write("Insert withdraw ammount: ");
         }
-        void PrintModel(IModel model)
+        public void AskForNewAccountType()
         {
-            if (model is IUser user)
-                PrintUser(user);
-            else if (model is IAccount account)
-                PrintAccount(account);
-            else if (model is ITextItem textItem)
-                PrintTextItem(textItem);
+            Console.Clear();
+            Console.Write("Type of new account(Simple/Vip): ");
         }
-        void PrintUser(IUser user)
+        public void DisplayEmptyList()
         {
-            Console.WriteLine(
-                           $"Id: {user.Id}\t" +
-                           $"Name: {user.Name}");
+            Console.Clear();
+            Console.WriteLine("***Empty***");
         }
-        void PrintAccount(IAccount account)
-        {
-            Console.WriteLine(
-                        $"Id: {account.Id}\t" +
-                        $"Type: {Enum.GetName(typeof(AccountType), account.Type)}\t" +
-                        $"Balance: {account.Balance}");
-        }
-        void PrintTextItem(ITextItem textItem)
-        {
-            Console.WriteLine(textItem.Text);
-        }
+        public void DisplayWithdrawError() =>
+            Console.WriteLine("Cannot withdraw from account, not enough money.");
+        public void DisplayInvalidTypeMessage() =>
+            Console.WriteLine("Invalid type of account");
+        public void DisplayInvalidMoneyFormat() =>
+            Console.WriteLine("Invalid money format, must be decimal");
     }
 }

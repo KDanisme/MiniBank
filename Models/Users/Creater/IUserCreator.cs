@@ -9,7 +9,6 @@ namespace MiniBank.Models
 {
     interface IUserCreator
     {
-        IUser Create(string name);
         IUser Create(int id,string name);
     }
 }

@@ -9,17 +9,11 @@ namespace MiniBank.Models.Accounts
 {
     class VipAccount : Account
     {
-        public VipAccount(int id,int userId, double balance) 
-            : base(id,AccountType.Vip, userId, balance) { }
-        public VipAccount(int userId,double balance)
-            : base(AccountType.Vip, userId, balance) { }
-        public override void Deposite(double ammount)
-        {
+        public VipAccount(int id, int userId, decimal balance)
+            : base(id, AccountType.Vip, userId, balance) { }
+        public override void Deposite(decimal ammount) =>
             Balance += ammount;
-        }
-        public override void Withdraw(double ammount)
-        {
+        public override void Withdraw(decimal ammount) =>
             Balance -= ammount;
-        }
     }
 }

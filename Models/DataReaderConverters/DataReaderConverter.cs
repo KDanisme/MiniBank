@@ -10,7 +10,7 @@ namespace MiniBank.Models
     {
         public IDataReaderUserConverter UserConverter { get; set; }
         public IDataReaderAccountConverter AccountConverter { get; set; }
-        public DataReaderConverter(IDataReaderUserConverter userConverter, IDataReaderAccountConverter accountConverter)
+        public DataReaderConverter(IDataReaderUserConverter userConverter , IDataReaderAccountConverter accountConverter)
         {
             this.UserConverter = userConverter;
             this.AccountConverter = accountConverter;

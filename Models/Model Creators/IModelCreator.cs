@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace MiniBank.Models
 {
-    interface IModelCreator : IDbModelCreator
+    interface IModelCreator
     {
 
-        ITextItemCreator TextItemCreator { get; set; }
-        
-        IListHandlerCreator ListHandlerCreator { get; set; }
+        IUserCreator UserCreator { get; set; }
+        IAccountCreator AccountCreator { get; set; }
     }
 }

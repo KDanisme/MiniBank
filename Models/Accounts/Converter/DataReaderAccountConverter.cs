@@ -16,7 +16,7 @@ namespace MiniBank.Models.Accounts
         }
         public IAccount Convert(IDataReader dataReader)
         {
-            return AccountCreator.Create((int)dataReader["Id"], (AccountType)dataReader["Type"], (int)dataReader["userId"], (double)dataReader["Balance"]);
+            return AccountCreator.Create((int)dataReader["Id"], (AccountType)dataReader["Type"], (int)dataReader["userId"], (decimal)dataReader["Balance"]);
         }
     }
 }

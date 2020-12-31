@@ -9,10 +9,6 @@ namespace MiniBank.Models
 {
     class UserCreator : IUserCreator
     {
-        public IUser Create(string name)
-        {
-            return new User(name);
-        }
         public IUser Create(int id, string name)
         {
             return new User(id, name);

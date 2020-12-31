@@ -15,11 +15,11 @@ namespace MiniBank.Models.Accounts
     {
         int Id { get; set; }
         int UserId { get; set; }
-        double Balance { get; set; }
+        decimal Balance { get; set; }
         AccountType Type { get; set; }
         
-        void Deposite(double ammount);
-        void Withdraw(double ammount);
+        void Deposite(decimal ammount);
+        void Withdraw(decimal ammount);
 
     }
 }

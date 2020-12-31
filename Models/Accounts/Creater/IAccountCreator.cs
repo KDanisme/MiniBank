@@ -10,7 +10,6 @@ namespace MiniBank.Models
 {
     interface IAccountCreator
     {
-        IAccount Create(AccountType type, int userId,double balance = 0);
-        IAccount Create(int id,AccountType type, int userId,double balance = 0);
+        IAccount Create(int id,AccountType type, int userId, decimal balance = 0);
     }
 }
