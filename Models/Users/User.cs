@@ -14,6 +14,7 @@ namespace MiniBank.Models.Users
         public User(int id, string name)
         {
             this.Id = id;
+            this.Name = name;
         }
     }
 }

@@ -44,11 +44,9 @@ namespace MiniBank
         public void CreateNewAccountForUser(IUser user, AccountType type) =>
             ExecuteCommand($"INSERT INTO [Account] (UserId,Balance,Type) VALUES({user.Id},{Account.StartingBalance},{(int)type})");
         public void CreateNewUser(string name) =>
-            ExecuteCommand($"INSERT INTO [User] (NAME) VALUES('{name}')");
-        public void UpdateAccount(IAccount account)
-        {
+            ExecuteCommand($"INSERT INTO [User] (Name) VALUES('{name}')");
+        public void UpdateAccount(IAccount account) =>
             ExecuteCommand($"UPDATE [Account] SET Balance = {account.Balance} WHERE Id = {account.Id}");
-        }
         void ExecuteCommand(string query)
         {
             using (var command = Connection.CreateCommand())
